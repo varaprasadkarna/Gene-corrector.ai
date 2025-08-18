@@ -2,9 +2,7 @@ flask
 flask-cors
 joblib
 numpy
-tensorflow
+tensorflow==2.15.0
+scikit-learn
 requests
-rdkit
 gunicorn
-firebase-functions
-firebase-admin
