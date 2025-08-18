@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import sys
 try:
@@ -7,26 +7,17 @@ try:
 except ImportError:
     # Works locally when running "python pipeline/index.py"
     import main as pipeline
-
-from flask import Flask
-from pipeline import main as pipeline
+# ...existing code...
+# Remove incorrect import. 'Flask', 'render_template', and 'request' are already imported correctly above.
+# ...existing code...
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/")
 def home():
-    return "Welcome! Your backend is running successfully 🚀"
+    return render_template("index.html")
 
-# Example prediction route
-@app.route("/predict", methods=["POST"])
-def predict():
-    # call pipeline function
-    return pipeline.run_prediction()
-
-
-# --- Create the Flask App ---
-app = Flask(__name__)
-CORS(app)
 
 # --- Load All Models ONCE when the server starts ---
 print("Initializing backend server...")
