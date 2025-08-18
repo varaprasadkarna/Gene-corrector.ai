@@ -1,7 +1,13 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from pipeline import main as pipeline
 import sys
+try:
+    # When running under Gunicorn/Render (package mode)
+    from pipeline import main as pipeline
+except ImportError:
+    # When running locally with "python pipeline/index.py"
+    import main as pipeline
+
 
 # --- Create the Flask App ---
 app = Flask(__name__)
