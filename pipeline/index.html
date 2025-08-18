@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeneCorrect AI - Gene Analysis Pipeline</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.1.0/3Dmol-min.js"></script>
+    
+    <!-- Firebase SDKs for Authentication -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #E0E0E0;
+            overflow: hidden; /* Hide scrollbars during transitions */
+            background-color: #1a1a1a; /* NVIDIA-style dark background */
+        }
+        
+        /* Custom Tailwind theme for NVIDIA colors */
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'nvidia-green': '#76b900',
+                        'nvidia-dark': '#1a1a1a',
+                        'nvidia-gray': '#333333',
+                    }
+                }
+            }
+        }
+
+        /* Page Container for transitions */
+        .page-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+            visibility: hidden; /* Start hidden */
+            opacity: 0;
+        }
+        .page-container.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+
+        .glass-card {
+            background: rgba(51, 51, 51, 0.5);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(118, 185, 0, 0.3); /* Green border */
+            border-radius: 0.75rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .cyber-title {
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-shadow: 0 0 20px rgba(118, 185, 0, 0.6); /* Green glow */
+            animation: title-glow 2s ease-in-out infinite;
+        }
+
+        .glow-button {
+            background-color: #76b900;
+            color: #1a1a1a;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(118, 185, 0, 0.4);
+        }
+
+        .glow-button:hover {
+            box-shadow: 0 0 30px rgba(118, 185, 0, 0.7);
+            transform: scale(1.05);
+        }
+        
+        .glow-button.secondary {
+             background-image: linear-gradient(to right, #4b5563, #1f2937);
+        }
+        .glow-button.secondary:hover {
+            box-shadow: 0 0 30px rgba(107, 114, 128, 0.5);
+        }
+
+        .form-input {
+            background-color: #333333;
+            border: 1px solid #4b5563;
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #76b900;
+            box-shadow: 0 0 15px rgba(118, 185, 0, 0.3);
+        }
+
+        /* Custom animations */
+        @keyframes slide-up {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-slide-up { animation: slide-up 0.6s ease-out forwards; }
+
+        @keyframes title-glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(118, 185, 0, 0.6); }
+            50% { text-shadow: 0 0 30px rgba(118, 185, 0, 0.9); }
+        }
+        
+        /* DNA Animation Styles */
+        #dna-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            perspective: 1200px;
+        }
+
+        @keyframes dna-helix-rotate {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+
+        .dna-helix {
+            position: absolute;
+            top: 50%;
+            width: 120px;
+            height: 90vh;
+            transform-style: preserve-3d;
+            transform: translateY(-50%) rotateX(75deg);
+            animation: dna-helix-rotate 40s linear infinite;
+        }
+        
+        .dna-helix.left { left: 5%; }
+        .dna-helix.right { right: 5%; animation-direction: reverse; }
+
+        .base-pair {
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #76b900 40%, #76b900 60%, transparent);
+            border-radius: 2px;
+            opacity: 0.5;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1a1a1a; }
+        ::-webkit-scrollbar-thumb { background: #76b900; border-radius: 4px; }
+    </style>
+</head>
+<body class="antialiased relative">
+
+    <!-- Background Animations -->
+    <div id="dna-container"></div>
+
+    <!-- Landing Page Container -->
+    <div id="landing-page" class="page-container active min-h-screen flex flex-col items-center justify-center">
+        <div class="text-center z-10">
+            <h1 class="text-6xl md:text-7xl text-nvidia-green cyber-title">DNA Mutation Classifier</h1>
+            <p class="mt-4 text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
+                Advanced artificial intelligence system for detecting and classifying DNA mutations with high accuracy and precision
+            </p>
+        </div>
+
+        <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl w-full px-4 z-10">
+            <!-- About Us Card -->
+            <div class="p-8 glass-card flex flex-col items-center text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-nvidia-green mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h2 class="text-2xl font-bold text-white mb-2">About Us</h2>
+                <p class="text-gray-400 mb-6 flex-grow">
+                    Discover the purpose of our platform, how to use the analysis tools, and the technology behind our models.
+                </p>
+                <button id="about-us-button" class="glow-button w-full">Learn More</button>
+            </div>
+
+            <!-- System Login Card -->
+            <div class="p-8 glass-card flex flex-col items-center text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-nvidia-green mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                </svg>
+                <h2 class="text-2xl font-bold text-white mb-2">System Login</h2>
+                <p class="text-gray-400 mb-6 flex-grow">
+                    Access advanced features for administrators, biologists, and model trainers. Manage data, view reports, and train models.
+                </p>
+                <button id="show-login-button" class="glow-button w-full">Login to System</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Page -->
+    <div id="login-page" class="page-container min-h-screen flex items-center justify-center">
+        <div id="login-card" class="w-full max-w-md p-8 space-y-8 glass-card z-10 mx-4">
+            <div class="text-center">
+                <h1 class="text-4xl text-nvidia-green cyber-title">System Access</h1>
+                <p class="mt-2 text-gray-300">Biologist Login Portal</p>
+            </div>
+            <form id="login-form" class="space-y-6">
+                <input id="login-email" type="email" required class="w-full form-input" placeholder="Email Address">
+                <input id="login-password" type="password" required class="w-full form-input" placeholder="Password">
+                <p id="login-error" class="text-red-400 text-sm text-center hidden"></p>
+                <button type="submit" class="w-full glow-button">Access Platform</button>
+                <p class="text-center text-sm text-gray-400">
+                    Don't have an account? 
+                    <button type="button" id="show-signup-button" class="font-semibold text-nvidia-green hover:underline">Sign Up</button>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sign Up Page -->
+    <div id="signup-page" class="page-container min-h-screen flex items-center justify-center">
+        <div id="signup-card" class="w-full max-w-md p-8 space-y-8 glass-card z-10 mx-4">
+            <div class="text-center">
+                <h1 class="text-4xl text-nvidia-green cyber-title">Create Account</h1>
+                <p class="mt-2 text-gray-300">Join the GeneCorrect Platform</p>
+            </div>
+            <form id="signup-form" class="space-y-6">
+                <input id="signup-email" type="email" required class="w-full form-input" placeholder="Email Address">
+                <input id="signup-password" type="password" required class="w-full form-input" placeholder="Password (min. 6 characters)">
+                <p id="signup-error" class="text-red-400 text-sm text-center hidden"></p>
+                <button type="submit" class="w-full glow-button">Create Account</button>
+                <p class="text-center text-sm text-gray-400">
+                    Already have an account? 
+                    <button type="button" id="back-to-login-button" class="font-semibold text-nvidia-green hover:underline">Log In</button>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Application Page -->
+    <div id="main-app" class="page-container min-h-screen">
+        <div class="min-h-screen opacity-0 transition-opacity duration-1000 ease-in-out" id="main-app-content">
+            <header class="py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+                <div></div>
+                <h1 class="text-5xl text-nvidia-green text-center cyber-title">GeneCorrect AI</h1>
+                <button id="logout-button" class="glow-button secondary">Logout</button>
+            </header>
+
+            <main class="container mx-auto px-4 py-8">
+                <div class="max-w-4xl mx-auto">
+                    <!-- Input Section -->
+                    <div class="p-8 glass-card">
+                        <h2 class="text-2xl font-semibold text-nvidia-green mb-4">Enter Gene Sequence</h2>
+                        <textarea id="sequence-input" rows="6" class="w-full form-input placeholder-gray-500 resize-none" placeholder="Paste your DNA sequence here (e.g., ATCG...)"></textarea>
+                        <button id="analyze-button" class="mt-6 w-full glow-button flex items-center justify-center">
+                            <svg id="analyze-icon" class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                            <svg id="loading-spinner" class="animate-spin -ml-1 mr-3 h-5 w-5 text-nvidia-dark hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <span id="analyze-button-text">Analyze Sequence</span>
+                        </button>
+                    </div>
+
+                    <!-- Results Section -->
+                    <div id="results-section" class="mt-10 p-8 glass-card hidden">
+                        <h2 class="text-2xl font-semibold text-nvidia-green mb-6 border-b-2 border-nvidia-green/30 pb-3">Analysis Results</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="result-item">
+                                <h3 class="text-lg font-semibold text-gray-300">Gene Type</h3>
+                                <p id="gene-type" class="text-2xl font-bold text-nvidia-green mt-1">-</p>
+                            </div>
+                            <div class="result-item">
+                                <h3 class="text-lg font-semibold text-gray-300">Mutation Status</h3>
+                                <p id="mutation-status" class="text-2xl font-bold mt-1">-</p>
+                            </div>
+                        </div>
+                        <div class="mt-8 result-item">
+                            <h3 class="text-lg font-semibold text-gray-300">Corrected Sequence</h3>
+                            <div class="mt-2 p-4 rounded-lg bg-nvidia-gray border border-gray-600 font-mono text-nvidia-green break-words max-h-48 overflow-y-auto">
+                                <p id="corrected-sequence">-</p>
+                            </div>
+                        </div>
+                        <div id="visualize-button-container" class="result-item hidden mt-6">
+                            <button id="visualize-protein-button" class="w-full glow-button secondary flex items-center justify-center">
+                                Visualize Protein Structure
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="text-center py-6 mt-10 text-gray-500 text-sm">
+                <p>&copy; 2025 GeneCorrect AI. All rights reserved.</p>
+            </footer>
+        </div>
+    </div>
+    
+    <!-- About Us Modal -->
+    <div id="about-us-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+        <div class="glass-card max-w-2xl w-full p-8 rounded-xl relative">
+            <button id="close-about-modal-button" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <h2 class="text-3xl text-nvidia-green cyber-title mb-4">About GeneCorrect AI</h2>
+            <div class="text-gray-300 space-y-4 max-h-[70vh] overflow-y-auto pr-4">
+                <h3 class="text-xl font-semibold text-white">Our Mission & Agenda</h3>
+                <p>GeneCorrect AI is a state-of-the-art platform designed to empower biologists and genetic researchers. Our mission is to accelerate genetic research by providing a highly accurate, fast, and intuitive tool for identifying DNA mutations in key genes like CFTR and DSCAM. Our agenda is to leverage generative AI to not only detect these mutations but also to propose corrected, non-mutated sequences, offering a potential path for therapeutic research.</p>
+                
+                <h3 class="text-xl font-semibold text-white">Benefits for Researchers</h3>
+                 <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Rapid Analysis:</strong> Get near-instant classification of gene type and mutation status, saving valuable lab time.</li>
+                    <li><strong>AI-Powered Correction:</strong> Our generative model provides a computationally-derived healthy sequence, offering a baseline for comparison and study.</li>
+                    <li><strong>Interactive Visualization:</strong> Instantly view the 3D protein structure of the identified gene, providing crucial insights into its biological function and form.</li>
+                    <li><strong>Streamlined Workflow:</strong> From raw sequence to 3D model, our integrated pipeline simplifies the entire analysis process.</li>
+                </ul>
+
+                <h3 class="text-xl font-semibold text-white">How to Use the Platform</h3>
+                <ol class="list-decimal list-inside space-y-2">
+                    <li><strong>Login:</strong> Access the platform using your biologist credentials. If you don't have an account, you can create one from the login page.</li>
+                    <li><strong>Enter Sequence:</strong> Paste a raw DNA sequence (containing only A, C, G, T) into the text area on the main dashboard.</li>
+                    <li><strong>Analyze:</strong> Click the "Analyze Sequence" button to submit the data to our pipeline.</li>
+                    <li><strong>View Results:</strong> The system will classify the gene, determine its mutation status, and generate a corrected sequence if a mutation is found.</li>
+                    <li><strong>Visualize:</strong> Click the "Visualize Protein Structure" button to render an interactive 3D model of the corresponding protein.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Protein Visualizer Modal -->
+    <div id="protein-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+        <div class="glass-card max-w-3xl w-full p-8 rounded-xl relative">
+            <button id="close-protein-modal-button" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <h2 class="text-3xl text-nvidia-green cyber-title mb-4">3D Protein Structure</h2>
+            <div id="protein-viewer" class="w-full h-96 bg-black rounded-lg mt-4"></div>
+        </div>
+    </div>
+
+
+    <script>
+        // --- Firebase Configuration ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyCCqsirBfRcWJZCfdAKpdK24B0LjZhMWDQ",
+            authDomain: "finalproject-e2984.firebaseapp.com",
+            projectId: "finalproject-e2984",
+            storageBucket: "finalproject-e2984.appspot.com",
+            messagingSenderId: "849808392791",
+            appId: "1:849808392791:web:f8b8be37a6e3e46d2b5912",
+            measurementId: "G-4C8HPEXDM3"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const landingPage = document.getElementById('landing-page');
+            const loginPage = document.getElementById('login-page');
+            const signupPage = document.getElementById('signup-page');
+            const mainApp = document.getElementById('main-app');
+            const mainAppContent = document.getElementById('main-app-content');
+
+            const showLoginButton = document.getElementById('show-login-button');
+            const showSignupButton = document.getElementById('show-signup-button');
+            const backToLoginButton = document.getElementById('back-to-login-button');
+            const logoutButton = document.getElementById('logout-button');
+            
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+            const loginError = document.getElementById('login-error');
+            const signupError = document.getElementById('signup-error');
+
+            const aboutUsModal = document.getElementById('about-us-modal');
+            const aboutUsButton = document.getElementById('about-us-button');
+            const closeAboutModalButton = document.getElementById('close-about-modal-button');
+            
+            const proteinModal = document.getElementById('protein-modal');
+            const closeProteinModalButton = document.getElementById('close-protein-modal-button');
+            const visualizeButtonContainer = document.getElementById('visualize-button-container');
+            const visualizeProteinButton = document.getElementById('visualize-protein-button');
+            const proteinViewerDiv = document.getElementById('protein-viewer');
+            
+            const analyzeButton = document.getElementById('analyze-button');
+            const analyzeButtonText = document.getElementById('analyze-button-text');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const analyzeIcon = document.getElementById('analyze-icon');
+            const resultsSection = document.getElementById('results-section');
+            const sequenceInput = document.getElementById('sequence-input');
+            
+            let currentGeneType = '';
+
+            // --- DNA Helix Animation ---
+            const helixContainer = document.getElementById('dna-container');
+            const numPairs = 80;
+            function createHelix(side) {
+                const helix = document.createElement('div');
+                helix.className = `dna-helix ${side}`;
+                for (let i = 0; i < numPairs; i++) {
+                    const pair = document.createElement('div');
+                    pair.className = 'base-pair';
+                    const yPos = (i - numPairs / 2) * 25;
+                    const rotation = i * 22.5;
+                    pair.style.transform = `translateY(${yPos}px) rotateY(${rotation}deg)`;
+                    helix.appendChild(pair);
+                }
+                helixContainer.appendChild(helix);
+            }
+            createHelix('left');
+            createHelix('right');
+
+            // --- FIXED: Page Switching Logic ---
+            const allPages = [landingPage, loginPage, signupPage, mainApp];
+            let currentPage = landingPage;
+            function switchPage(pageToShow) {
+                if (currentPage) {
+                    currentPage.classList.remove('active');
+                }
+                pageToShow.classList.add('active');
+                currentPage = pageToShow;
+            }
+
+            // --- Authentication State Listener ---
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    document.body.style.overflowY = 'auto';
+                    if(currentPage !== mainApp) {
+                       switchPage(mainApp);
+                       setTimeout(() => mainAppContent.style.opacity = '1', 20);
+                    }
+                } else {
+                    document.body.style.overflowY = 'hidden';
+                    if(currentPage !== landingPage) {
+                        switchPage(landingPage);
+                    }
+                    mainAppContent.style.opacity = '0';
+                }
+            });
+
+            // --- Event Listeners for Page Navigation ---
+            showLoginButton.addEventListener('click', () => switchPage(loginPage));
+            showSignupButton.addEventListener('click', () => switchPage(signupPage));
+            backToLoginButton.addEventListener('click', () => switchPage(loginPage));
+
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                loginError.classList.add('hidden');
+                auth.signInWithEmailAndPassword(email, password)
+                    .catch(error => {
+                        loginError.textContent = error.message;
+                        loginError.classList.remove('hidden');
+                    });
+            });
+
+            signupForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('signup-email').value;
+                const password = document.getElementById('signup-password').value;
+                signupError.classList.add('hidden');
+                auth.createUserWithEmailAndPassword(email, password)
+                    .then(() => {
+                        return auth.signOut();
+                    })
+                    .then(() => {
+                        alert('Account created successfully! Please log in.');
+                        switchPage(loginPage);
+                    })
+                    .catch(error => {
+                        signupError.textContent = error.message;
+                        signupError.classList.remove('hidden');
+                    });
+            });
+
+            logoutButton.addEventListener('click', () => {
+                auth.signOut();
+            });
+            
+            // --- Modal Logic ---
+            aboutUsButton.addEventListener('click', () => aboutUsModal.classList.remove('hidden'));
+            closeAboutModalButton.addEventListener('click', () => aboutUsModal.classList.add('hidden'));
+            visualizeProteinButton.addEventListener('click', handleVisualizeProtein);
+            closeProteinModalButton.addEventListener('click', () => proteinModal.classList.add('hidden'));
+            
+            // --- Typing Effect Function ---
+            function typeEffect(element, text, speed = 20) {
+                element.textContent = "";
+                let i = 0;
+                function typing() {
+                    if (i < text.length) {
+                        element.textContent += text.charAt(i);
+                        i++;
+                        setTimeout(typing, speed);
+                    }
+                }
+                typing();
+            }
+
+            // --- Analysis Logic ---
+            async function handleAnalysis() {
+                const sequence = sequenceInput.value.trim().toUpperCase();
+                if (!sequence) {
+                    alert('Please enter a gene sequence.');
+                    return;
+                }
+
+                analyzeButtonText.textContent = 'Analyzing...';
+                loadingSpinner.classList.remove('hidden');
+                analyzeIcon.classList.add('hidden');
+                analyzeButton.disabled = true;
+                resultsSection.classList.add('hidden');
+                document.querySelectorAll('.result-item').forEach(el => el.classList.remove('animate-slide-up'));
+                visualizeButtonContainer.classList.add('hidden');
+
+                try {
+                    const response = await fetch('http://127.0.0.1:5000/analyze', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ sequence }),
+                    });
+                    const results = await response.json();
+                    if (!response.ok) throw new Error(results.error);
+
+                    document.getElementById('gene-type').textContent = `${results.geneType} (${results.confidence})`;
+                    const mutationStatusEl = document.getElementById('mutation-status');
+                    mutationStatusEl.textContent = results.mutationStatus;
+                    const isMutated = results.mutationStatus.toLowerCase() === 'mutated';
+                    mutationStatusEl.className = `text-2xl font-bold mt-1 ${isMutated ? 'text-red-400' : 'text-green-400'}`;
+                    
+                    const correctedEl = document.getElementById('corrected-sequence');
+                    typeEffect(correctedEl, results.correctedSequence, 10);
+                    
+                    currentGeneType = results.geneType;
+                    visualizeButtonContainer.classList.remove('hidden');
+
+                    resultsSection.classList.remove('hidden');
+                    document.querySelectorAll('.result-item').forEach((el, index) => {
+                        el.style.animationDelay = `${index * 0.15}s`;
+                        el.classList.add('animate-slide-up');
+                    });
+
+                } catch (error) {
+                    const errorMessage = `Analysis failed: ${error.message}\n\nPlease ensure your Python backend server (app.py) is running.`;
+                    alert(errorMessage);
+                } finally {
+                    analyzeButtonText.textContent = 'Analyze Sequence';
+                    loadingSpinner.classList.add('hidden');
+                    analyzeIcon.classList.remove('hidden');
+                    analyzeButton.disabled = false;
+                }
+            }
+            
+            // --- Protein Visualization Logic ---
+            async function handleVisualizeProtein() {
+                if (!currentGeneType) {
+                    alert('No gene type identified to visualize.');
+                    return;
+                }
+
+                proteinModal.classList.remove('hidden');
+                proteinViewerDiv.innerHTML = '<p class="text-center text-gray-400">Fetching 3D model from Protein Data Bank...</p>';
+
+                try {
+                    const response = await fetch('http://127.0.0.1:5000/visualize-protein', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ geneType: currentGeneType }),
+                    });
+
+                    const result = await response.json();
+                    if (!response.ok) throw new Error(result.error);
+                    
+                    proteinViewerDiv.innerHTML = '';
+                    let viewer = $3Dmol.createViewer(proteinViewerDiv, { backgroundColor: '#1a1a1a' });
+                    
+                    viewer.addModel(result.pdbData, "pdb");
+                    viewer.setStyle({}, {cartoon: {color: 'spectrum'}});
+                    viewer.zoomTo();
+                    viewer.render();
+                    viewer.zoom(1.2, 1000);
+
+                } catch (error) {
+                    proteinViewerDiv.innerHTML = `<p class="text-center text-red-400">Could not generate model: ${error.message}</p>`;
+                }
+            }
+            
+            analyzeButton.addEventListener('click', handleAnalysis);
+        });
+    </script>
+
+</body>
+</html>
