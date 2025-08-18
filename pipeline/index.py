@@ -8,6 +8,20 @@ except ImportError:
     # Works locally when running "python pipeline/index.py"
     import main as pipeline
 
+from flask import Flask
+from pipeline import main as pipeline
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "Welcome! Your backend is running successfully 🚀"
+
+# Example prediction route
+@app.route("/predict", methods=["POST"])
+def predict():
+    # call pipeline function
+    return pipeline.run_prediction()
 
 
 # --- Create the Flask App ---
