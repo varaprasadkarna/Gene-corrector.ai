@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import main as pipeline # Import main.py and give it an alias 'pipeline'
+from pipeline import main as pipeline
 import sys
 
 # --- Create the Flask App ---
