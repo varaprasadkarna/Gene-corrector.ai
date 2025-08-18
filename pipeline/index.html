@@ -315,26 +315,8 @@
                 </svg>
             </button>
             <h2 class="text-3xl text-nvidia-green cyber-title mb-4">About GeneCorrect AI</h2>
-            <div class="text-gray-300 space-y-4 max-h-[70vh] overflow-y-auto pr-4">
-                <h3 class="text-xl font-semibold text-white">Our Mission & Agenda</h3>
-                <p>GeneCorrect AI is a state-of-the-art platform designed to empower biologists and genetic researchers. Our mission is to accelerate genetic research by providing a highly accurate, fast, and intuitive tool for identifying DNA mutations in key genes like CFTR and DSCAM. Our agenda is to leverage generative AI to not only detect these mutations but also to propose corrected, non-mutated sequences, offering a potential path for therapeutic research.</p>
-                
-                <h3 class="text-xl font-semibold text-white">Benefits for Researchers</h3>
-                 <ul class="list-disc list-inside space-y-2">
-                    <li><strong>Rapid Analysis:</strong> Get near-instant classification of gene type and mutation status, saving valuable lab time.</li>
-                    <li><strong>AI-Powered Correction:</strong> Our generative model provides a computationally-derived healthy sequence, offering a baseline for comparison and study.</li>
-                    <li><strong>Interactive Visualization:</strong> Instantly view the 3D protein structure of the identified gene, providing crucial insights into its biological function and form.</li>
-                    <li><strong>Streamlined Workflow:</strong> From raw sequence to 3D model, our integrated pipeline simplifies the entire analysis process.</li>
-                </ul>
-
-                <h3 class="text-xl font-semibold text-white">How to Use the Platform</h3>
-                <ol class="list-decimal list-inside space-y-2">
-                    <li><strong>Login:</strong> Access the platform using your biologist credentials. If you don't have an account, you can create one from the login page.</li>
-                    <li><strong>Enter Sequence:</strong> Paste a raw DNA sequence (containing only A, C, G, T) into the text area on the main dashboard.</li>
-                    <li><strong>Analyze:</strong> Click the "Analyze Sequence" button to submit the data to our pipeline.</li>
-                    <li><strong>View Results:</strong> The system will classify the gene, determine its mutation status, and generate a corrected sequence if a mutation is found.</li>
-                    <li><strong>Visualize:</strong> Click the "Visualize Protein Structure" button to render an interactive 3D model of the corresponding protein.</li>
-                </ol>
+            <div id="about-us-content" class="text-gray-300 space-y-4 max-h-[70vh] overflow-y-auto pr-4">
+                <!-- Content will be injected here by JavaScript -->
             </div>
         </div>
     </div>
@@ -389,6 +371,7 @@
             const aboutUsModal = document.getElementById('about-us-modal');
             const aboutUsButton = document.getElementById('about-us-button');
             const closeAboutModalButton = document.getElementById('close-about-modal-button');
+            const aboutUsContent = document.getElementById('about-us-content');
             
             const proteinModal = document.getElementById('protein-modal');
             const closeProteinModalButton = document.getElementById('close-protein-modal-button');
@@ -424,7 +407,7 @@
             createHelix('left');
             createHelix('right');
 
-            // --- FIXED: Page Switching Logic ---
+            // --- Page Switching Logic ---
             const allPages = [landingPage, loginPage, signupPage, mainApp];
             let currentPage = landingPage;
             function switchPage(pageToShow) {
@@ -498,6 +481,29 @@
             visualizeProteinButton.addEventListener('click', handleVisualizeProtein);
             closeProteinModalButton.addEventListener('click', () => proteinModal.classList.add('hidden'));
             
+            // --- About Us Content ---
+            aboutUsContent.innerHTML = `
+                <h3 class="text-xl font-semibold text-white">Our Mission & Agenda</h3>
+                <p>GeneCorrect AI is a state-of-the-art platform designed to empower biologists and genetic researchers. Our mission is to accelerate genetic research by providing a highly accurate, fast, and intuitive tool for identifying DNA mutations in key genes like CFTR and DSCAM. Our agenda is to leverage generative AI to not only detect these mutations but also to propose corrected, non-mutated sequences, offering a potential path for therapeutic research.</p>
+                
+                <h3 class="text-xl font-semibold text-white">Benefits for Researchers</h3>
+                 <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Rapid Analysis:</strong> Get near-instant classification of gene type and mutation status, saving valuable lab time.</li>
+                    <li><strong>AI-Powered Correction:</strong> Our generative model provides a computationally-derived healthy sequence, offering a baseline for comparison and study.</li>
+                    <li><strong>Interactive Visualization:</strong> Instantly view the 3D protein structure of the identified gene, providing crucial insights into its biological function and form.</li>
+                    <li><strong>Streamlined Workflow:</strong> From raw sequence to 3D model, our integrated pipeline simplifies the entire analysis process.</li>
+                </ul>
+
+                <h3 class="text-xl font-semibold text-white">How to Use the Platform</h3>
+                <ol class="list-decimal list-inside space-y-2">
+                    <li><strong>Login:</strong> Access the platform using your biologist credentials. If you don't have an account, you can create one from the login page.</li>
+                    <li><strong>Enter Sequence:</strong> Paste a raw DNA sequence (containing only A, C, G, T) into the text area on the main dashboard.</li>
+                    <li><strong>Analyze:</strong> Click the "Analyze Sequence" button to submit the data to our pipeline.</li>
+                    <li><strong>View Results:</strong> The system will classify the gene, determine its mutation status, and generate a corrected sequence if a mutation is found.</li>
+                    <li><strong>Visualize:</strong> Click the "Visualize Protein Structure" button to render an interactive 3D model of the corresponding protein.</li>
+                </ol>
+            `;
+
             // --- Typing Effect Function ---
             function typeEffect(element, text, speed = 20) {
                 element.textContent = "";
