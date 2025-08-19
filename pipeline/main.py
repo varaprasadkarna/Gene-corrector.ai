@@ -4,7 +4,7 @@ import numpy as np
 import tensorflow as tf
 import pickle
 import sys
-import requests # This is now used for fetching PDB data
+import requests 
 
 # --- Configuration ---
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -38,7 +38,7 @@ def load_all_models():
         print(f"FATAL ERROR: Could not load models. {e}")
         return False
 
-# --- MODIFIED: Function to get the PDB file data ---
+# --- PDB Data Fetching Function ---
 def get_protein_pdb_data(gene_type):
     """
     Takes a gene type, finds its PDB ID, and fetches the raw PDB file
@@ -56,7 +56,7 @@ def get_protein_pdb_data(gene_type):
     try:
         url = f"https://files.rcsb.org/download/{pdb_id}.pdb"
         response = requests.get(url, timeout=15)
-        response.raise_for_status() # Raise an error for bad responses (e.g., 404)
+        response.raise_for_status() 
         return response.text
     except requests.exceptions.RequestException as e:
         raise RuntimeError(f"Failed to fetch PDB data for {pdb_id}: {e}")
@@ -149,13 +149,11 @@ def run_full_pipeline(sequence):
 
     mutation_status = classify_mutation(sequence)
     
-    final_sequence = sequence
     corrected_display = "No correction needed."
     if mutation_status == 'mutated':
         corrected_sequence = correct_gene_sequence(sequence, gene_type)
         if gene_type.lower() == 'dscam':
             corrected_sequence *= 4
-        final_sequence = corrected_sequence
         corrected_display = corrected_sequence
     
     return {
