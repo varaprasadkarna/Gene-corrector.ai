@@ -6,6 +6,7 @@
     <title>GeneCorrect AI - Gene Analysis Pipeline</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.1.0/3Dmol-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
     <!-- Firebase SDKs for Authentication -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -86,6 +87,7 @@
         
         .glow-button.secondary {
              background-image: linear-gradient(to right, #4b5563, #1f2937);
+             color: #E0E0E0;
         }
         .glow-button.secondary:hover {
             box-shadow: 0 0 30px rgba(107, 114, 128, 0.5);
@@ -193,67 +195,26 @@
                 <button id="about-us-button" class="glow-button w-full">Learn More</button>
             </div>
 
-            <!-- System Login Card -->
+            <!-- Analysis Card -->
             <div class="p-8 glass-card flex flex-col items-center text-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-nvidia-green mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                 <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-nvidia-green mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                 </svg>
-                <h2 class="text-2xl font-bold text-white mb-2">System Login</h2>
+                <h2 class="text-2xl font-bold text-white mb-2">Start Analysis</h2>
                 <p class="text-gray-400 mb-6 flex-grow">
-                    Access advanced features for administrators, biologists, and model trainers. Manage data, view reports, and train models.
+                    Proceed to the main pipeline to analyze a gene sequence, check for mutations, and visualize the resulting protein structure.
                 </p>
-                <button id="show-login-button" class="glow-button w-full">Login to System</button>
+                <button id="show-analysis-page-button" class="glow-button w-full">Start Analysis</button>
             </div>
-        </div>
-    </div>
-
-    <!-- Login Page -->
-    <div id="login-page" class="page-container min-h-screen flex items-center justify-center">
-        <div id="login-card" class="w-full max-w-md p-8 space-y-8 glass-card z-10 mx-4">
-            <div class="text-center">
-                <h1 class="text-4xl text-nvidia-green cyber-title">System Access</h1>
-                <p class="mt-2 text-gray-300">Biologist Login Portal</p>
-            </div>
-            <form id="login-form" class="space-y-6">
-                <input id="login-email" type="email" required class="w-full form-input" placeholder="Email Address">
-                <input id="login-password" type="password" required class="w-full form-input" placeholder="Password">
-                <p id="login-error" class="text-red-400 text-sm text-center hidden"></p>
-                <button type="submit" class="w-full glow-button">Access Platform</button>
-                <p class="text-center text-sm text-gray-400">
-                    Don't have an account? 
-                    <button type="button" id="show-signup-button" class="font-semibold text-nvidia-green hover:underline">Sign Up</button>
-                </p>
-            </form>
-        </div>
-    </div>
-
-    <!-- Sign Up Page -->
-    <div id="signup-page" class="page-container min-h-screen flex items-center justify-center">
-        <div id="signup-card" class="w-full max-w-md p-8 space-y-8 glass-card z-10 mx-4">
-            <div class="text-center">
-                <h1 class="text-4xl text-nvidia-green cyber-title">Create Account</h1>
-                <p class="mt-2 text-gray-300">Join the GeneCorrect Platform</p>
-            </div>
-            <form id="signup-form" class="space-y-6">
-                <input id="signup-email" type="email" required class="w-full form-input" placeholder="Email Address">
-                <input id="signup-password" type="password" required class="w-full form-input" placeholder="Password (min. 6 characters)">
-                <p id="signup-error" class="text-red-400 text-sm text-center hidden"></p>
-                <button type="submit" class="w-full glow-button">Create Account</button>
-                <p class="text-center text-sm text-gray-400">
-                    Already have an account? 
-                    <button type="button" id="back-to-login-button" class="font-semibold text-nvidia-green hover:underline">Log In</button>
-                </p>
-            </form>
         </div>
     </div>
 
     <!-- Main Application Page -->
     <div id="main-app" class="page-container min-h-screen">
         <div class="min-h-screen opacity-0 transition-opacity duration-1000 ease-in-out" id="main-app-content">
-            <header class="py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-                <div></div>
+            <header class="py-6 px-4 sm:px-6 lg:px-8">
                 <h1 class="text-5xl text-nvidia-green text-center cyber-title">GeneCorrect AI</h1>
-                <button id="logout-button" class="glow-button secondary">Logout</button>
+                <p class="text-center text-gray-300 mt-2">Advanced Gene Sequence Analysis & Correction Pipeline</p>
             </header>
 
             <main class="container mx-auto px-4 py-8">
@@ -291,10 +252,18 @@
                                 <p id="corrected-sequence">-</p>
                             </div>
                         </div>
-                        <div id="visualize-button-container" class="result-item hidden mt-6">
-                            <button id="visualize-protein-button" class="w-full glow-button secondary flex items-center justify-center">
-                                Visualize Protein Structure
-                            </button>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div id="visualize-button-container" class="result-item hidden mt-6">
+                                <button id="visualize-protein-button" class="w-full glow-button secondary flex items-center justify-center">
+                                    Visualize Protein Structure
+                                </button>
+                            </div>
+                            <div id="download-report-container" class="result-item hidden mt-6">
+                                <button id="download-report-button" class="w-full glow-button secondary flex items-center justify-center">
+                                    Download PDF Report
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -336,38 +305,13 @@
 
 
     <script>
-        // --- Firebase Configuration ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyCCqsirBfRcWJZCfdAKpdK24B0LjZhMWDQ",
-            authDomain: "finalproject-e2984.firebaseapp.com",
-            projectId: "finalproject-e2984",
-            storageBucket: "finalproject-e2984.appspot.com",
-            messagingSenderId: "849808392791",
-            appId: "1:849808392791:web:f8b8be37a6e3e46d2b5912",
-            measurementId: "G-4C8HPEXDM3"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-
         document.addEventListener('DOMContentLoaded', () => {
             const landingPage = document.getElementById('landing-page');
-            const loginPage = document.getElementById('login-page');
-            const signupPage = document.getElementById('signup-page');
             const mainApp = document.getElementById('main-app');
             const mainAppContent = document.getElementById('main-app-content');
 
-            const showLoginButton = document.getElementById('show-login-button');
-            const showSignupButton = document.getElementById('show-signup-button');
-            const backToLoginButton = document.getElementById('back-to-login-button');
-            const logoutButton = document.getElementById('logout-button');
+            const showAnalysisPageButton = document.getElementById('show-analysis-page-button');
             
-            const loginForm = document.getElementById('login-form');
-            const signupForm = document.getElementById('signup-form');
-            const loginError = document.getElementById('login-error');
-            const signupError = document.getElementById('signup-error');
-
             const aboutUsModal = document.getElementById('about-us-modal');
             const aboutUsButton = document.getElementById('about-us-button');
             const closeAboutModalButton = document.getElementById('close-about-modal-button');
@@ -378,6 +322,9 @@
             const visualizeButtonContainer = document.getElementById('visualize-button-container');
             const visualizeProteinButton = document.getElementById('visualize-protein-button');
             const proteinViewerDiv = document.getElementById('protein-viewer');
+
+            const downloadReportContainer = document.getElementById('download-report-container');
+            const downloadReportButton = document.getElementById('download-report-button');
             
             const analyzeButton = document.getElementById('analyze-button');
             const analyzeButtonText = document.getElementById('analyze-button-text');
@@ -407,8 +354,8 @@
             createHelix('left');
             createHelix('right');
 
-            // --- FIXED: Page Switching Logic ---
-            const allPages = [landingPage, loginPage, signupPage, mainApp];
+            // --- Page Switching Logic ---
+            const allPages = [landingPage, mainApp];
             let currentPage = landingPage;
             function switchPage(pageToShow) {
                 if (currentPage) {
@@ -418,63 +365,13 @@
                 currentPage = pageToShow;
             }
 
-            // --- Authentication State Listener ---
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    document.body.style.overflowY = 'auto';
-                    if(currentPage !== mainApp) {
-                       switchPage(mainApp);
-                       setTimeout(() => mainAppContent.style.opacity = '1', 20);
-                    }
-                } else {
-                    document.body.style.overflowY = 'hidden';
-                    if(currentPage !== landingPage) {
-                        switchPage(landingPage);
-                    }
-                    mainAppContent.style.opacity = '0';
-                }
-            });
-
             // --- Event Listeners for Page Navigation ---
-            showLoginButton.addEventListener('click', () => switchPage(loginPage));
-            showSignupButton.addEventListener('click', () => switchPage(signupPage));
-            backToLoginButton.addEventListener('click', () => switchPage(loginPage));
-
-            loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const email = document.getElementById('login-email').value;
-                const password = document.getElementById('login-password').value;
-                loginError.classList.add('hidden');
-                auth.signInWithEmailAndPassword(email, password)
-                    .catch(error => {
-                        loginError.textContent = error.message;
-                        loginError.classList.remove('hidden');
-                    });
+            showAnalysisPageButton.addEventListener('click', () => {
+                document.body.style.overflowY = 'auto'; // Allow scrolling
+                switchPage(mainApp);
+                setTimeout(() => mainAppContent.style.opacity = '1', 20);
             });
 
-            signupForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const email = document.getElementById('signup-email').value;
-                const password = document.getElementById('signup-password').value;
-                signupError.classList.add('hidden');
-                auth.createUserWithEmailAndPassword(email, password)
-                    .then(() => {
-                        return auth.signOut();
-                    })
-                    .then(() => {
-                        alert('Account created successfully! Please log in.');
-                        switchPage(loginPage);
-                    })
-                    .catch(error => {
-                        signupError.textContent = error.message;
-                        signupError.classList.remove('hidden');
-                    });
-            });
-
-            logoutButton.addEventListener('click', () => {
-                auth.signOut();
-            });
-            
             // --- Modal Logic ---
             aboutUsButton.addEventListener('click', () => aboutUsModal.classList.remove('hidden'));
             closeAboutModalButton.addEventListener('click', () => aboutUsModal.classList.add('hidden'));
@@ -496,15 +393,14 @@
 
                 <h3 class="text-xl font-semibold text-white">How to Use the Platform</h3>
                 <ol class="list-decimal list-inside space-y-2">
-                    <li><strong>Login:</strong> Access the platform using your biologist credentials. If you don't have an account, you can create one from the login page.</li>
                     <li><strong>Enter Sequence:</strong> Paste a raw DNA sequence (containing only A, C, G, T) into the text area on the main dashboard.</li>
                     <li><strong>Analyze:</strong> Click the "Analyze Sequence" button to submit the data to our pipeline.</li>
                     <li><strong>View Results:</strong> The system will classify the gene, determine its mutation status, and generate a corrected sequence if a mutation is found.</li>
-                    <li><strong>Visualize:</strong> Click the "Visualize Protein Structure" button to render an interactive 3D model of the corresponding protein.</li>
+                    <li><strong>Visualize & Report:</strong> Click the "Visualize" button to render a 3D model, or "Download Report" for a PDF summary with detailed mutation impact analysis.</li>
                 </ol>
             `;
 
-            // --- Typing Effect Function ---
+            // --- Typing Effect Function (Kept in case it's desired later) ---
             function typeEffect(element, text, speed = 20) {
                 element.textContent = "";
                 let i = 0;
@@ -533,6 +429,7 @@
                 resultsSection.classList.add('hidden');
                 document.querySelectorAll('.result-item').forEach(el => el.classList.remove('animate-slide-up'));
                 visualizeButtonContainer.classList.add('hidden');
+                downloadReportContainer.classList.add('hidden');
 
                 try {
                     const response = await fetch('http://127.0.0.1:5000/analyze', {
@@ -543,17 +440,19 @@
                     const results = await response.json();
                     if (!response.ok) throw new Error(results.error);
 
-                    document.getElementById('gene-type').textContent = `${results.geneType} (${results.confidence})`;
+                    document.getElementById('gene-type').textContent = results.geneType;
                     const mutationStatusEl = document.getElementById('mutation-status');
                     mutationStatusEl.textContent = results.mutationStatus;
                     const isMutated = results.mutationStatus.toLowerCase() === 'mutated';
                     mutationStatusEl.className = `text-2xl font-bold mt-1 ${isMutated ? 'text-red-400' : 'text-green-400'}`;
                     
                     const correctedEl = document.getElementById('corrected-sequence');
-                    typeEffect(correctedEl, results.correctedSequence, 10);
+                    // --- FIX: Removed typing effect to ensure full sequence is displayed immediately ---
+                    correctedEl.textContent = results.correctedSequence;
                     
                     currentGeneType = results.geneType;
                     visualizeButtonContainer.classList.remove('hidden');
+                    downloadReportContainer.classList.remove('hidden');
 
                     resultsSection.classList.remove('hidden');
                     document.querySelectorAll('.result-item').forEach((el, index) => {
@@ -605,8 +504,112 @@
                     proteinViewerDiv.innerHTML = `<p class="text-center text-red-400">Could not generate model: ${error.message}</p>`;
                 }
             }
+
+            // --- PDF Report Generation with Multi-Page Support ---
+            function handleDownloadReport() {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                // --- Data Gathering ---
+                const inputSequence = document.getElementById('sequence-input').value;
+                const geneType = document.getElementById('gene-type').textContent;
+                const mutationStatus = document.getElementById('mutation-status').textContent;
+                const correctedSequence = document.getElementById('corrected-sequence').textContent;
+                const geneExplanations = {
+                    'CFTR': `The CFTR (Cystic Fibrosis Transmembrane conductance Regulator) gene provides instructions for making a protein that functions as a channel across the membrane of cells that produce mucus, sweat, saliva, tears, and digestive enzymes.\n\nIMPACT OF MUTATION:\nMutations in the CFTR gene disrupt the function of these chloride channels, preventing them from regulating the flow of chloride ions and water across cell membranes. As a result, cells that line the passageways of the lungs, pancreas, and other organs produce mucus that is abnormally thick and sticky. This mucus clogs the airways and various ducts, causing the characteristic signs and symptoms of Cystic Fibrosis, including chronic respiratory infections, poor growth, and digestive problems.`,
+                    'DSCAM': `The DSCAM (Down Syndrome Cell Adhesion Molecule) gene is crucial for neural development. It provides instructions for making a protein that acts as a cell adhesion molecule on the surface of neurons. This protein guides the growth of axons and dendrites, ensuring that neurons form proper connections (synapses) with each other.\n\nIMPACT OF MUTATION:\nMutations or variations in the DSCAM gene can impair its function in establishing a precise pattern of neural wiring. This has been linked to various neurodevelopmental disorders, including Down syndrome, autism spectrum disorder, and intellectual disability. The disruption of neural circuits can lead to cognitive impairments, learning difficulties, and other neurological abnormalities associated with these conditions.`,
+                    'DEFAULT': `No specific information is available for this gene type in our database. In general, a gene mutation is a permanent alteration in the DNA sequence that makes up a gene. Mutations can affect the resulting protein in several ways: they might cause the protein to be non-functional, partially functional, or to have a new, abnormal function. The consequences for an organism depend heavily on where the mutation occurs and what role the affected protein plays in the body.`
+                };
+                const explanation = geneExplanations[geneType] || geneExplanations['DEFAULT'];
+
+                // --- PDF Document Configuration ---
+                const margin = 15;
+                const pageHeight = doc.internal.pageSize.getHeight();
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const usableWidth = pageWidth - margin * 2;
+                let currentY = 0; // Start at 0, will be updated by functions
+
+                // --- Helper Function for Page Breaks ---
+                const checkPageBreak = (neededHeight) => {
+                    if (currentY + neededHeight >= pageHeight - margin) {
+                        doc.addPage();
+                        currentY = margin;
+                    }
+                };
+                
+                // --- PDF Header ---
+                const addHeader = () => {
+                    currentY = margin;
+                    doc.setFontSize(20);
+                    doc.setFont("helvetica", "bold");
+                    doc.text("GeneCorrect AI - Analysis Report", pageWidth / 2, currentY, { align: "center" });
+                    currentY += 8;
+                    doc.setFontSize(10);
+                    doc.setFont("helvetica", "normal");
+                    doc.text(new Date().toUTCString(), pageWidth / 2, currentY, { align: "center" });
+                    currentY += 15;
+                };
+
+                addHeader();
+
+                // --- Helper to draw a section with automatic page breaks ---
+                const drawSection = (title, content, options = {}) => {
+                    const titleHeight = 8;
+                    checkPageBreak(titleHeight); // Check if title fits
+
+                    doc.setFontSize(14);
+                    doc.setFont("helvetica", "bold");
+                    doc.text(title, margin, currentY);
+                    currentY += titleHeight;
+                    
+                    doc.setFontSize(options.fontSize || 10);
+                    doc.setFont(options.fontFamily || "courier", options.fontStyle || "normal");
+                    
+                    const lines = doc.splitTextToSize(content, usableWidth);
+                    const lineHeight = (options.fontSize || 10) * 0.35 * 1.15; // Calculate line height
+
+                    lines.forEach(line => {
+                        checkPageBreak(lineHeight);
+                        doc.text(line, margin, currentY);
+                        currentY += lineHeight;
+                    });
+
+                    currentY += 5; // Spacing after section
+                    checkPageBreak(5);
+                    doc.setDrawColor(220, 220, 220); // light grey line
+                    doc.line(margin, currentY, pageWidth - margin, currentY);
+                    currentY += 10;
+                };
+                
+                // --- Add sections to PDF ---
+                drawSection("1. Input Sequence", inputSequence);
+                
+                // --- Analysis Results section (custom layout) ---
+                checkPageBreak(20); // Check for space for this section
+                doc.setFontSize(14);
+                doc.setFont("helvetica", "bold");
+                doc.text("2. Analysis Results", margin, currentY);
+                currentY += 8;
+                doc.setFontSize(11);
+                doc.setFont("helvetica", "normal");
+                doc.text(`- Gene Type Identified: ${geneType}`, margin, currentY);
+                currentY += 7;
+                doc.text(`- Mutation Status: ${mutationStatus}`, margin, currentY);
+                currentY += 10;
+                doc.setDrawColor(220, 220, 220);
+                doc.line(margin, currentY, pageWidth - margin, currentY);
+                currentY += 10;
+                
+                drawSection("3. AI-Generated Corrected Sequence", correctedSequence);
+                drawSection("4. Biological Impact of Mutation", explanation, { fontFamily: "helvetica", fontSize: 11 });
+
+                // --- Save the PDF ---
+                doc.save(`GeneCorrect_Report_${geneType}.pdf`);
+            }
             
+            // --- Attach main event listeners ---
             analyzeButton.addEventListener('click', handleAnalysis);
+            downloadReportButton.addEventListener('click', handleDownloadReport);
         });
     </script>
 
