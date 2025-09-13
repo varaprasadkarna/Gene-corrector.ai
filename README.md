@@ -1,4 +1,4 @@
-# final_year_projectGeneCorrect AI: An End-to-End DNA Mutation Analysis & Correction Pipeline
+#GeneCorrect.ai: An End-to-End DNA Mutation Analysis & Correction Pipeline
 <!-- Replace with a URL to your screenshot -->
 
 GeneCorrect AI is an integrated web application designed to automate and accelerate the process of DNA sequence analysis. The platform addresses the slow and fragmented workflow of traditional genetic research by providing a single, seamless pipeline from raw DNA sequence to a final, interpretable report with 3D protein visualization.
