@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.1.0/3Dmol-min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
+
     <!-- Firebase SDKs for Authentication -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
@@ -20,18 +21,20 @@
         body {
             font-family: 'Inter', sans-serif;
             color: #E0E0E0;
-            overflow: hidden; /* Hide scrollbars during transitions */
-            background-color: #1a1a1a; /* NVIDIA-style dark background */
+            overflow: hidden;
+            /* Hide scrollbars during transitions */
+            background-color: #1a1a1a;
+            /* NVIDIA-style dark background */
         }
-        
+
         /* Custom Tailwind theme for NVIDIA colors */
-        tailwind.config ={
+        tailwind.config= {
             theme: {
                 extend: {
                     colors: {
                         'nvidia-green': '#76b900',
-                        'nvidia-dark': '#1a1a1a',
-                        'nvidia-gray': '#333333',
+                            'nvidia-dark': '#1a1a1a',
+                            'nvidia-gray': '#333333',
                     }
                 }
             }
@@ -45,9 +48,11 @@
             width: 100%;
             height: 100%;
             transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
-            visibility: hidden; /* Start hidden */
+            visibility: hidden;
+            /* Start hidden */
             opacity: 0;
         }
+
         .page-container.active {
             visibility: visible;
             opacity: 1;
@@ -58,7 +63,8 @@
             background: rgba(51, 51, 51, 0.5);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(118, 185, 0, 0.3); /* Green border */
+            border: 1px solid rgba(118, 185, 0, 0.3);
+            /* Green border */
             border-radius: 0.75rem;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
@@ -66,7 +72,8 @@
         .cyber-title {
             font-weight: 700;
             letter-spacing: 0.05em;
-            text-shadow: 0 0 20px rgba(118, 185, 0, 0.6); /* Green glow */
+            text-shadow: 0 0 20px rgba(118, 185, 0, 0.6);
+            /* Green glow */
             animation: title-glow 2s ease-in-out infinite;
         }
 
@@ -84,11 +91,12 @@
             box-shadow: 0 0 30px rgba(118, 185, 0, 0.7);
             transform: scale(1.05);
         }
-        
+
         .glow-button.secondary {
-             background-image: linear-gradient(to right, #4b5563, #1f2937);
-             color: #E0E0E0;
+            background-image: linear-gradient(to right, #4b5563, #1f2937);
+            color: #E0E0E0;
         }
+
         .glow-button.secondary:hover {
             box-shadow: 0 0 30px rgba(107, 114, 128, 0.5);
         }
@@ -110,16 +118,33 @@
 
         /* Custom animations */
         @keyframes slide-up {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        .animate-slide-up { animation: slide-up 0.6s ease-out forwards; }
+
+        .animate-slide-up {
+            animation: slide-up 0.6s ease-out forwards;
+        }
 
         @keyframes title-glow {
-            0%, 100% { text-shadow: 0 0 20px rgba(118, 185, 0, 0.6); }
-            50% { text-shadow: 0 0 30px rgba(118, 185, 0, 0.9); }
+
+            0%,
+            100% {
+                text-shadow: 0 0 20px rgba(118, 185, 0, 0.6);
+            }
+
+            50% {
+                text-shadow: 0 0 30px rgba(118, 185, 0, 0.9);
+            }
         }
-        
+
         /* DNA Animation Styles */
         #dna-container {
             position: fixed;
@@ -133,8 +158,13 @@
         }
 
         @keyframes dna-helix-rotate {
-            from { transform: rotateY(0deg); }
-            to { transform: rotateY(360deg); }
+            from {
+                transform: rotateY(0deg);
+            }
+
+            to {
+                transform: rotateY(360deg);
+            }
         }
 
         .dna-helix {
@@ -146,9 +176,15 @@
             transform: translateY(-50%) rotateX(75deg);
             animation: dna-helix-rotate 40s linear infinite;
         }
-        
-        .dna-helix.left { left: 5%; }
-        .dna-helix.right { right: 5%; animation-direction: reverse; }
+
+        .dna-helix.left {
+            left: 5%;
+        }
+
+        .dna-helix.right {
+            right: 5%;
+            animation-direction: reverse;
+        }
 
         .base-pair {
             position: absolute;
@@ -163,11 +199,21 @@
         }
 
         /* Scrollbar styling */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #1a1a1a; }
-        ::-webkit-scrollbar-thumb { background: #76b900; border-radius: 4px; }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #76b900;
+            border-radius: 4px;
+        }
     </style>
 </head>
+
 <body class="antialiased relative">
 
     <!-- Background Animations -->
@@ -178,31 +224,38 @@
         <div class="text-center z-10">
             <h1 class="text-6xl md:text-7xl text-nvidia-green cyber-title">GeneCorrector.AI</h1>
             <p class="mt-4 text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
-                Advanced artificial intelligence system for detecting and classifying DNA mutations with high accuracy and precision
+                Advanced artificial intelligence system for detecting and classifying DNA mutations with high accuracy
+                and precision
             </p>
         </div>
 
         <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl w-full px-4 z-10">
             <!-- About Us Card -->
             <div class="p-8 glass-card flex flex-col items-center text-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-nvidia-green mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-nvidia-green mb-4" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <h2 class="text-2xl font-bold text-white mb-2">About Us</h2>
                 <p class="text-gray-400 mb-6 flex-grow">
-                    Discover the purpose of our platform, how to use the analysis tools, and the technology behind our models.
+                    Discover the purpose of our platform, how to use the analysis tools, and the technology behind our
+                    models.
                 </p>
                 <button id="about-us-button" class="glow-button w-full">Learn More</button>
             </div>
 
             <!-- Analysis Card -->
             <div class="p-8 glass-card flex flex-col items-center text-center">
-                 <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-nvidia-green mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-nvidia-green mb-4" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                 </svg>
                 <h2 class="text-2xl font-bold text-white mb-2">Start Analysis</h2>
                 <p class="text-gray-400 mb-6 flex-grow">
-                    Proceed to the main pipeline to analyze a gene sequence, check for mutations, and visualize the resulting protein structure.
+                    Proceed to the main pipeline to analyze a gene sequence, check for mutations, and visualize the
+                    resulting protein structure.
                 </p>
                 <button id="show-analysis-page-button" class="glow-button w-full">Start Analysis</button>
             </div>
@@ -222,12 +275,41 @@
                     <!-- Input Section -->
                     <div class="p-8 glass-card">
                         <h2 class="text-2xl font-semibold text-nvidia-green mb-4">Enter Gene Sequence</h2>
-                        <textarea id="sequence-input" rows="6" class="w-full form-input placeholder-gray-500 resize-none" placeholder="Paste your DNA sequence here (e.g., ATCG...)"></textarea>
+                        <textarea id="sequence-input" rows="6"
+                            class="w-full form-input placeholder-gray-500 resize-none"
+                            placeholder="Paste your DNA sequence here (e.g., ATCG...)"></textarea>
+
+                        <!-- Example Sequence Buttons -->
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="text-gray-400 text-sm py-2 mr-2">Try examples:</span>
+                            <button
+                                class="example-btn text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 py-1 px-3 rounded transition-colors border border-gray-600"
+                                data-seq="">CFTR (Healthy)</button>
+                            <button
+                                class="example-btn text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 py-1 px-3 rounded transition-colors border border-gray-600"
+                                data-seq="">CFTR (Mutated)</button>
+                            <button
+                                class="example-btn text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 py-1 px-3 rounded transition-colors border border-gray-600"
+                                data-seq="">DSCAM (Healthy)</button>
+                            <button
+                                class="example-btn text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 py-1 px-3 rounded transition-colors border border-gray-600"
+                                data-seq="">DSCAM (Mutated)</button>
+                        </div>
+
                         <button id="analyze-button" class="mt-6 w-full glow-button flex items-center justify-center">
-                            <svg id="analyze-icon" class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
-                            <svg id="loading-spinner" class="animate-spin -ml-1 mr-3 h-5 w-5 text-nvidia-dark hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            <svg id="analyze-icon" class="w-6 h-6 mr-2" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4">
+                                </path>
+                            </svg>
+                            <svg id="loading-spinner" class="animate-spin -ml-1 mr-3 h-5 w-5 text-nvidia-dark hidden"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
                             </svg>
                             <span id="analyze-button-text">Analyze Sequence</span>
                         </button>
@@ -235,7 +317,9 @@
 
                     <!-- Results Section -->
                     <div id="results-section" class="mt-10 p-8 glass-card hidden">
-                        <h2 class="text-2xl font-semibold text-nvidia-green mb-6 border-b-2 border-nvidia-green/30 pb-3">Analysis Results</h2>
+                        <h2
+                            class="text-2xl font-semibold text-nvidia-green mb-6 border-b-2 border-nvidia-green/30 pb-3">
+                            Analysis Results</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div class="result-item">
                                 <h3 class="text-lg font-semibold text-gray-300">Gene Type</h3>
@@ -248,19 +332,22 @@
                         </div>
                         <div class="mt-8 result-item">
                             <h3 class="text-lg font-semibold text-gray-300">Corrected Sequence</h3>
-                            <div class="mt-2 p-4 rounded-lg bg-nvidia-gray border border-gray-600 font-mono text-nvidia-green break-words max-h-48 overflow-y-auto">
+                            <div
+                                class="mt-2 p-4 rounded-lg bg-nvidia-gray border border-gray-600 font-mono text-nvidia-green break-words max-h-48 overflow-y-auto">
                                 <p id="corrected-sequence">-</p>
                             </div>
                         </div>
-                        
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div id="visualize-button-container" class="result-item hidden mt-6">
-                                <button id="visualize-protein-button" class="w-full glow-button secondary flex items-center justify-center">
+                                <button id="visualize-protein-button"
+                                    class="w-full glow-button secondary flex items-center justify-center">
                                     Visualize Protein Structure
                                 </button>
                             </div>
                             <div id="download-report-container" class="result-item hidden mt-6">
-                                <button id="download-report-button" class="w-full glow-button secondary flex items-center justify-center">
+                                <button id="download-report-button"
+                                    class="w-full glow-button secondary flex items-center justify-center">
                                     Download PDF Report
                                 </button>
                             </div>
@@ -274,12 +361,14 @@
             </footer>
         </div>
     </div>
-    
+
     <!-- About Us Modal -->
-    <div id="about-us-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+    <div id="about-us-modal"
+        class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
         <div class="glass-card max-w-2xl w-full p-8 rounded-xl relative">
             <button id="close-about-modal-button" class="absolute top-4 right-4 text-gray-400 hover:text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
@@ -291,10 +380,12 @@
     </div>
 
     <!-- Protein Visualizer Modal -->
-    <div id="protein-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+    <div id="protein-modal"
+        class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
         <div class="glass-card max-w-3xl w-full p-8 rounded-xl relative">
             <button id="close-protein-modal-button" class="absolute top-4 right-4 text-gray-400 hover:text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
@@ -311,12 +402,12 @@
             const mainAppContent = document.getElementById('main-app-content');
 
             const showAnalysisPageButton = document.getElementById('show-analysis-page-button');
-            
+
             const aboutUsModal = document.getElementById('about-us-modal');
             const aboutUsButton = document.getElementById('about-us-button');
             const closeAboutModalButton = document.getElementById('close-about-modal-button');
             const aboutUsContent = document.getElementById('about-us-content');
-            
+
             const proteinModal = document.getElementById('protein-modal');
             const closeProteinModalButton = document.getElementById('close-protein-modal-button');
             const visualizeButtonContainer = document.getElementById('visualize-button-container');
@@ -325,14 +416,14 @@
 
             const downloadReportContainer = document.getElementById('download-report-container');
             const downloadReportButton = document.getElementById('download-report-button');
-            
+
             const analyzeButton = document.getElementById('analyze-button');
             const analyzeButtonText = document.getElementById('analyze-button-text');
             const loadingSpinner = document.getElementById('loading-spinner');
             const analyzeIcon = document.getElementById('analyze-icon');
             const resultsSection = document.getElementById('results-section');
             const sequenceInput = document.getElementById('sequence-input');
-            
+
             let currentGeneType = '';
 
             // --- DNA Helix Animation ---
@@ -377,7 +468,7 @@
             closeAboutModalButton.addEventListener('click', () => aboutUsModal.classList.add('hidden'));
             visualizeProteinButton.addEventListener('click', handleVisualizeProtein);
             closeProteinModalButton.addEventListener('click', () => proteinModal.classList.add('hidden'));
-            
+
             // --- About Us Content ---
             aboutUsContent.innerHTML = `
                 <h3 class="text-xl font-semibold text-white">Our Mission & Agenda</h3>
@@ -445,11 +536,11 @@
                     mutationStatusEl.textContent = results.mutationStatus;
                     const isMutated = results.mutationStatus.toLowerCase() === 'mutated';
                     mutationStatusEl.className = `text-2xl font-bold mt-1 ${isMutated ? 'text-red-400' : 'text-green-400'}`;
-                    
+
                     const correctedEl = document.getElementById('corrected-sequence');
                     // --- FIX: Removed typing effect to ensure full sequence is displayed immediately ---
                     correctedEl.textContent = results.correctedSequence;
-                    
+
                     currentGeneType = results.geneType;
                     visualizeButtonContainer.classList.remove('hidden');
                     downloadReportContainer.classList.remove('hidden');
@@ -470,7 +561,7 @@
                     analyzeButton.disabled = false;
                 }
             }
-            
+
             // --- Protein Visualization Logic ---
             async function handleVisualizeProtein() {
                 if (!currentGeneType) {
@@ -490,12 +581,12 @@
 
                     const result = await response.json();
                     if (!response.ok) throw new Error(result.error);
-                    
+
                     proteinViewerDiv.innerHTML = '';
                     let viewer = $3Dmol.createViewer(proteinViewerDiv, { backgroundColor: '#1a1a1a' });
-                    
+
                     viewer.addModel(result.pdbData, "pdb");
-                    viewer.setStyle({}, {cartoon: {color: 'spectrum'}});
+                    viewer.setStyle({}, { cartoon: { color: 'spectrum' } });
                     viewer.zoomTo();
                     viewer.render();
                     viewer.zoom(1.2, 1000);
@@ -509,7 +600,7 @@
             function handleDownloadReport() {
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF();
-                
+
                 // --- Data Gathering ---
                 const inputSequence = document.getElementById('sequence-input').value;
                 const geneType = document.getElementById('gene-type').textContent;
@@ -536,7 +627,7 @@
                         currentY = margin;
                     }
                 };
-                
+
                 // --- PDF Header ---
                 const addHeader = () => {
                     currentY = margin;
@@ -561,10 +652,10 @@
                     doc.setFont("helvetica", "bold");
                     doc.text(title, margin, currentY);
                     currentY += titleHeight;
-                    
+
                     doc.setFontSize(options.fontSize || 10);
                     doc.setFont(options.fontFamily || "courier", options.fontStyle || "normal");
-                    
+
                     const lines = doc.splitTextToSize(content, usableWidth);
                     const lineHeight = (options.fontSize || 10) * 0.35 * 1.15; // Calculate line height
 
@@ -580,10 +671,10 @@
                     doc.line(margin, currentY, pageWidth - margin, currentY);
                     currentY += 10;
                 };
-                
+
                 // --- Add sections to PDF ---
                 drawSection("1. Input Sequence", inputSequence);
-                
+
                 // --- Analysis Results section (custom layout) ---
                 checkPageBreak(20); // Check for space for this section
                 doc.setFontSize(14);
@@ -599,19 +690,31 @@
                 doc.setDrawColor(220, 220, 220);
                 doc.line(margin, currentY, pageWidth - margin, currentY);
                 currentY += 10;
-                
+
                 drawSection("3. AI-Generated Corrected Sequence", correctedSequence);
                 drawSection("4. Biological Impact of Mutation", explanation, { fontFamily: "helvetica", fontSize: 11 });
 
                 // --- Save the PDF ---
                 doc.save(`GeneCorrect_Report_${geneType}.pdf`);
             }
-            
+
             // --- Attach main event listeners ---
             analyzeButton.addEventListener('click', handleAnalysis);
             downloadReportButton.addEventListener('click', handleDownloadReport);
+
+            // --- Example Button Logic ---
+            document.querySelectorAll('.example-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const seq = e.target.getAttribute('data-seq');
+                    sequenceInput.value = seq;
+                    // Flash effect to show it loaded
+                    sequenceInput.style.borderColor = '#76b900';
+                    setTimeout(() => sequenceInput.style.borderColor = '', 300);
+                });
+            });
         });
     </script>
 
 </body>
+
 </html>
