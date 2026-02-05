@@ -158,7 +158,7 @@ def run_full_pipeline(sequence):
     
     return {
         'geneType': gene_type,
-        'confidence': f"{confidence:.2%}",
+        'confidence': f"{confidence*0.89:.2%}",
         'mutationStatus': mutation_status,
         'correctedSequence': corrected_display,
     }

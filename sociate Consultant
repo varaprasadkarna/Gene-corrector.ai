@@ -1,0 +1,101 @@
+[33mcommit b4d4e2da7d19da337b57e81020d74e4f143e560c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Varaprasad <varaprasadkarna305@gmail.com>
+Date:   Wed Jan 7 09:27:57 2026 +0530
+
+    final push
+
+[33mcommit d0cb38ad143e338166af8a5716bd8e5488a2b097[m
+Author: Varaprasad <varaprasadkarna305@gmail.com>
+Date:   Wed Sep 10 18:54:04 2025 +0530
+
+    aft presentation
+
+[33mcommit 7e30e20c6c6df9e100c21700763887373dddc121[m
+Author: Varaprasad <varaprasadkarna305@gmail.com>
+Date:   Tue Sep 2 22:50:58 2025 +0530
+
+    final changes
+
+[33mcommit ad1c5acde84630af2a9b4bc82526b1c2ce35da7d[m
+Author: Varaprasad <varaprasadkarna305@gmail.com>
+Date:   Mon Aug 25 19:48:48 2025 +0530
+
+    fresh
+
+[33mcommit 4815bdb201f5d99f2c8cf67a8743bf3d3bfbc594[m
+Author: Varaprasad <varaprasadkarna305@gmail.com>
+Date:   Tue Aug 19 14:06:01 2025 +0530
+
+    final change
+
+[33mcommit b0a5b7bbc41b9313d0b294ca8e64a82bbdcd1f93[m
+Author: Varaprasad <varaprasadkarna305@gmail.com>
+Date:   Mon Aug 18 21:33:32 2025 +0530
+
+    change in index.py
+
+[33mcommit 5d1e103e7d16aca596ea1158f335ef1c89c1d78f[m
+Author: Varaprasad <varaprasadkarna305@gmail.com>
+Date:   Mon Aug 18 21:25:40 2025 +0530
+
+    moved index.html to templates
+
+[33mcommit 1b55c27fd4b3db2a8f32b7d78e75d6e5507b7f71[m
+Author: Varaprasad <varaprasadkarna305@gmail.com>
+Date:   Mon Aug 18 21:20:57 2025 +0530
+
+    after deployment changes
+
+[33mcommit 53e3481f7d5ed22a22072ca2c6fc2c6056cb49f6[m
+Author: Varaprasad <varaprasadkarna305@gmail.com>
+Date:   Mon Aug 18 21:14:16 2025 +0530
+
+    fixed req.txt
+
+[33mcommit 23c375b089881490632e9c8aea184a5dae64dd3f[m
+Author: Varaprasad <varaprasadkarna305@gmail.com>
+Date:   Mon Aug 18 21:10:11 2025 +0530
+
+    render fix pipeline import
+
+[33mcommit 432bffe1478131cc26aae643642405f27d1bf03c[m
+Author: Varaprasad <varaprasadkarna305@gmail.com>
+Date:   Mon Aug 18 21:05:55 2025 +0530
+
+    chaneg import main
+
+[33mcommit 57903ac301a0830043abe6f72d0569af373613a9[m
+Author: Varaprasad <varaprasadkarna305@gmail.com>
+Date:   Mon Aug 18 21:01:19 2025 +0530
+
+    added  gunicorn
+
+[33mcommit 0c3c1940e9541c40bed0a1334722a16ed4b04312[m
+Author: Varaprasad <varaprasadkarna305@gmail.com>
+Date:   Mon Aug 18 20:17:47 2025 +0530
+
+    using render to deploy
+
+[33mcommit 4807ecadcb2e8f6d259de31e6b1e2b3f7544260e[m
+Author: Varaprasad <varaprasadkarna305@gmail.com>
+Date:   Mon Aug 18 20:03:12 2025 +0530
+
+    removed all files firebase and versal files
+
+[33mcommit f0917ed3de11c21e85cf44820478b54237205945[m
+Author: Varaprasad <varaprasadkarna305@gmail.com>
+Date:   Mon Aug 18 14:47:36 2025 +0530
+
+    Initial commit
+
+[33mcommit 2e607a66cf6becca984ccfcf1142d7b1b5ce0dc1[m
+Author: Varaprasad <varaprasadkarna305@gmail.com>
+Date:   Mon Aug 18 12:36:19 2025 +0530
+
+    initial static files
+
+[33mcommit 43b3bb750b35e5bab1f3939dadc97216066beded[m
+Author: Varaprasad <168628165+varaprasadkarna@users.noreply.github.com>
+Date:   Mon Aug 18 14:53:20 2025 +0530
+
+    Initial commit
