@@ -527,7 +527,7 @@
                 downloadReportContainer.classList.add('hidden');
 
                 try {
-                    const response = await fetch('http://127.0.0.1:5000/analyze', {
+                    const response = await fetch('/analyze', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ sequence }),
@@ -577,7 +577,7 @@
                 proteinViewerDiv.innerHTML = '<p class="text-center text-gray-400">Fetching 3D model from Protein Data Bank...</p>';
 
                 try {
-                    const response = await fetch('http://127.0.0.1:5000/visualize-protein', {
+                    const response = await fetch('/visualize-protein', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ geneType: currentGeneType }),
