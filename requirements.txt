@@ -1,0 +1,8 @@
+flask
+flask-cors
+gunicorn
+tensorflow-cpu
+numpy
+pandas
+joblib
+requests
